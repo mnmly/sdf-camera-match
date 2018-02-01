@@ -1,10 +1,10 @@
 uniform vec2 resolution;
-uniform vec3 target;
 uniform float time;
-uniform vec3 _cameraPosition;
-uniform mat4 _cameraViewMatrix;
-uniform mat4 _cameraInvProjectionMatrix;
 
+/** Camera Info from CPU **/
+uniform vec3 _cameraPosition; // -> 
+uniform mat4 _cameraViewMatrix; // -> model matrix of camera
+uniform mat4 _cameraInvProjectionMatrix;
 
 
 /**
@@ -60,7 +60,7 @@ float sdPlane( vec3 p ) {
 }
 
 float sceneSDF(vec3 samplePoint) {
-    return box(samplePoint, vec3(1.0, 1.0, 0.001));
+    return box(samplePoint, vec3(1.0, 1.0, 0.0001));
     // return sdPlane(samplePoint);
     // return cubeSDF(samplePoint);
 }
@@ -211,6 +211,5 @@ void main() {
 
     
     vec3 color = phongIllumination(K_a, K_d, K_s, shininess, p, eye);
-    
     gl_FragColor = vec4(color, 1.0);
 }

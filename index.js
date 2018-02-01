@@ -18,7 +18,6 @@ class App {
         this.mouse = vec2.create()
         this.engine = loop( this.tick.bind( this ) )
         this.winSize = [ window.innerWidth, window.innerHeight ]
-        this.useOrtho = false
         this.setupScene()
         this.resize()
         this.sideBySide = false
@@ -39,7 +38,6 @@ class App {
 
         this.renderCamera = new THREE.OrthographicCamera(-1,1,1,-1,1/Math.pow( 2, 53 ),1);
 
-
         this.geom = new THREE.BufferGeometry();
         this.geom.addAttribute( 'position', new THREE.BufferAttribute( new Float32Array([ -1,-1,0, 1,-1,0, 1,1,0, -1, -1, 0, 1, 1, 0, -1, 1, 0]), 3 ) );
         this.mesh = new THREE.Mesh( this.geom, new THREE.MeshBasicMaterial( { color: 0xff0000 } ) );
@@ -59,10 +57,8 @@ class App {
                 _cameraPosition:{ type:"v3", value:this.camera.position },
                 _cameraViewMatrix: { type: 'm4', value: new THREE.Matrix4() },
                 _cameraInvProjectionMatrix: { type: 'm4', value: new THREE.Matrix4() },
-                target:{ type:"v3", value:this.target },
                 raymarchMaximumDistance:{ type:"f", value:this.distance },
                 raymarchPrecision:{ type:"f", value:this.precision},
-                // clipToWorld: { type: 'm4', value: new THREE.Matrix4() }
             },
             fragmentShader: glslify( './lib/shaders/sdf.frag' ),
             vertexShader: glslify(`
@@ -75,8 +71,6 @@ class App {
         this.material.size = [this.winSize[0] / 2, this.winSize[1]]
         this.mesh.material = this.material
         this.debugMaterial = new MeshBasicMaterial({wireframe: true,color: 0xff0000})
-        // this.mesh.material.wireframe = true
-        // this.mesh.material = new THREE.MeshBasicMaterial( {color: 0xff0000 })
 
         if ( this.camera instanceof THREE.PerspectiveCamera ) {
             gui.add( this.camera, 'fov', 0.01, 90.0 ).onChange(() => this.camera.updateProjectionMatrix())
@@ -90,7 +84,6 @@ class App {
 
     tick() {
         this.controls.update()
-        this.material.uniforms.target.value = this.controls.target
         this.material.uniforms._cameraPosition.value = this.camera.position
 
         // https://www.gamasutra.com/blogs/DavidArppe/20170405/295240/How_to_get_Stunning_Graphics_with_Raymarching_in_Games.php
@@ -110,14 +103,13 @@ class App {
         invProjectionMat.elements[15] = -c / (d * e);
 
         this.material.uniforms._cameraInvProjectionMatrix.value = invProjectionMat
-        // this.material.uniforms.clipToWorld.value.set.apply(this.material.uniforms.clipToWorld.value, mat4.invert(this._worldToClip, this._worldToClip))
 
         this.mesh.material = this.debugMaterial
         this.renderer.render( this.scene, this.camera )
 
         this.mesh.material = this.material
         this.rendererSDF.render( this.scene, this.renderCamera )
-        // console.log(this.controls.target)
+
     }
 
     resize() {
@@ -134,7 +126,6 @@ class App {
             this.camera.right = size[ 0 ] / camFactor;
             this.camera.top = size[ 1 ] / camFactor;
             this.camera.bottom = -size[ 1 ] / camFactor;
-            console.log('ya')
             this.camera.updateProjectionMatrix();
         }
         
