@@ -1,0 +1,23 @@
+
+body, html
+    margin: 0
+    padding: 0
+
+.dg.ac
+    z-index: 2 !important
+
+canvas
+    position: absolute
+    top: 0
+    left: 0
+
+#main-canvas
+    z-index: 1
+
+.side-by-side
+    canvas
+        position: relative
+        top: auto
+        left: auto
+        float: left
+        display: inline-block

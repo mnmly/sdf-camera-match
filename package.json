@@ -1,0 +1,44 @@
+{
+  "name": "sdf-camera",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parallelshell \"npm run watch:js\" \"npm run watch:css\"",
+    "start:watch": "parallelshell \"gitwatch -e node_modules screenshot.png\" \"npm run watch:js\" \"npm run watch:css\" \"npm run bare\"",
+    "build": "npm run build:js && npm run build:css",
+    "watch:css": "onchange 'demo.css' -- npm run build:css",
+    "watch:js": "budo demo.js:bundle.js -v --live -- -t [babelify --presets [es2015] ] -t [ installify --save ] -t [glslify]",
+    "build:js": "browserify demo.js -t [babelify --presets [es2015] ] -t [ installify --save ] -t [glslify] -o bundle.js",
+    "build:css": "styl -w < demo.css > bundle.css",
+    "bare": "bare"
+  },
+  "author": "Hiroaki Yamane",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-preset-es2015": "^6.18.0",
+    "babelify": "^7.3.0",
+    "bare": "git+ssh://git@github.com/mnmly/bare.git",
+    "browserify": "^14.0.1",
+    "budo": "^10.0.0",
+    "installify": "^1.0.2",
+    "onchange": "^3.0.0",
+    "parallelshell": "^3.0.0",
+    "styl": "mnmly/styl"
+  },
+  "dependencies": {
+    "dat-gui": "^0.5.0",
+    "gl-mat4": "^1.1.4",
+    "gl-vec2": "^1.0.0",
+    "glsl-camera-ray": "^1.0.0",
+    "glsl-inverse": "^1.0.0",
+    "glsl-sdf-box": "^1.0.0",
+    "glsl-square-frame": "^1.0.1",
+    "glslify": "^6.0.0",
+    "raf-loop": "^1.1.3",
+    "regl": "^1.3.0",
+    "remap": "github:mnmly/remap",
+    "three": "^0.89.0",
+    "three-orbit-controls": "^82.1.0"
+  }
+}
